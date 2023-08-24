@@ -52,8 +52,6 @@ const variations = {
 interface Props {
   variation: "danger" | "secondary" | "primary";
   size: "large" | "medium" | "small";
-  onClick?: () => void;
-  disabled: boolean;
 }
 
 const Button = styled.button<Props>`
