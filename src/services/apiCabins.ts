@@ -1,3 +1,4 @@
+import { Cabin } from "../entities/Cabin";
 import supabase from "./supabase";
 export async function getCabins() {
   const { data, error } = await supabase.from("cabins").select("*");
@@ -15,6 +16,20 @@ export async function deleteCabin(id: number) {
   if (error) {
     console.log(error);
     throw new Error("Cabind could not be deleted");
+  }
+
+  return data;
+}
+
+export async function createCabin(newCabin: Cabin) {
+  const { data, error } = await supabase
+    .from("cabins")
+    .insert([newCabin])
+    .select();
+
+  if (error) {
+    console.log(error);
+    throw new Error("Cabind could not be created");
   }
 
   return data;
