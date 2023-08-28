@@ -4,36 +4,60 @@ import Button from "../../ui/Button";
 import FileInput from "../../ui/FileInput";
 import Textarea from "../../ui/Textarea";
 import { FieldValues, useForm, FieldErrors } from "react-hook-form";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createCabin } from "../../services/apiCabins";
 import { Cabin, CabinFromUser } from "../../entities/Cabin";
-import { toast } from "react-hot-toast/headless";
 import FormRow from "../../ui/FormRow";
+import { useUpdateCabin } from "./useUpdateCabin";
+import { useCreateCabin } from "./usecreateCabin";
 
-function CreateCabinForm() {
-  const queryClient = useQueryClient();
+const defaultCabinToEdit = {
+  created_at: "",
+  description: "",
+  discount: 0,
+  id: 0,
+  image: "",
+  maxCapacity: 0,
+  name: "",
+  regularPrice: 0,
+};
+
+interface Props {
+  cabinToEdit?: Cabin;
+}
+
+function CreateCabinForm({ cabinToEdit = defaultCabinToEdit }: Props) {
+  const { id: editId, ...editValues } = cabinToEdit as Cabin;
+  const isEditSession = Boolean(editId);
+
   const { register, handleSubmit, reset, getValues, formState } =
-    useForm<Cabin>();
+    useForm<Cabin>({
+      defaultValues: isEditSession ? editValues : {},
+    });
   const { errors } = formState;
 
-  const { mutate, isLoading: isCreating } = useMutation({
-    // mutationFn:createCabin
-    mutationFn: (newCabin: CabinFromUser) => createCabin(newCabin),
-    onSuccess: () => {
-      toast.success("New cabin successfully created");
-      queryClient.invalidateQueries({
-        queryKey: ["cabins"],
-      });
-      reset();
-    },
-    onError: (err: { message: string }) => {
-      toast.error(err.message);
-    },
-  });
+  // mutationFn for createCabin
+  const { createNewCabin, isCreating } = useCreateCabin();
+
+  //mutation Function for updating a cabin
+  const { editCabin, isEditing } = useUpdateCabin();
+
+  const isWorking = isCreating || isEditing;
 
   const onSubmitForm = (data: FieldValues) => {
-    console.log("data", data.image[0]);
-    mutate({ ...(data as CabinFromUser), image: data.image?.[0] });
+    const image = typeof data.image === "string" ? data.image : data.image[0];
+    const newCabin = { ...data, image: image } as CabinFromUser;
+
+    isEditSession
+      ? editCabin(
+          { newCabin, editId },
+          {
+            onSuccess: () => reset(),
+          }
+        )
+      : createNewCabin(newCabin, {
+          onSuccess: () => reset(),
+        });
+
+    // mutate({ ...(data as CabinFromUser), image: data.image?.[0] });
   };
 
   const onError = (errors: FieldErrors) => {
@@ -82,7 +106,7 @@ function CreateCabinForm() {
             required: "This field is required",
             min: {
               value: 10,
-              message: "Capacity should be at least 1",
+              message: "value should be at least 10$",
             },
           })}
         />
@@ -113,7 +137,6 @@ function CreateCabinForm() {
       >
         <Textarea
           id="description"
-          defaultValue=""
           {...register("description", {
             required: "This field is required",
           })}
@@ -129,7 +152,7 @@ function CreateCabinForm() {
           id="image"
           accept="image/*"
           {...register("image", {
-            required: "this filed is required",
+            required: isEditSession ? false : "this filed is required",
           })}
         />
       </FormRow>
@@ -139,8 +162,8 @@ function CreateCabinForm() {
         <Button variation="secondary" size="medium" type="reset">
           Cancel
         </Button>
-        <Button disabled={isCreating} variation="primary" size="medium">
-          {isCreating ? "creating .." : " add cabin"}
+        <Button disabled={isWorking} variation="primary" size="medium">
+          {isEditSession ? "Edit cabin" : " Create new cabin"}
         </Button>
       </FormRow>
     </Form>

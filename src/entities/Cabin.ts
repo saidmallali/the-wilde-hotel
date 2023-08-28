@@ -8,19 +8,18 @@ export interface Cabin {
   created_at?: string;
   description: string;
   discount: number;
-  id?: number;
-  image?: string | Image;
+  id: number;
+  image?: string;
   maxCapacity: number;
   name: string;
   regularPrice: number;
 }
 
 export interface CabinFromUser {
-  created_at?: string;
   description: string;
   discount: number;
   id?: number;
-  image?: Image;
+  image?: Image | string;
   maxCapacity: number;
   name: string;
   regularPrice: number;
