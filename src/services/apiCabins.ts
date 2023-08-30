@@ -36,7 +36,10 @@ export async function createCabin(newCabin: CabinFromUser) {
       ? `${Math.random()}-${newCabin?.image?.name}`.replace("/", "")
       : "";
 
-  const imagepath = `${supabaseUrl}/storage/v1/object/public/cabin-images/${imageName}`;
+  const imagepath =
+    typeof newCabin.image !== "string"
+      ? `${supabaseUrl}/storage/v1/object/public/cabin-images/${imageName}`
+      : newCabin.image;
 
   const { data, error } = await supabase
     .from("cabins")
@@ -52,6 +55,8 @@ export async function createCabin(newCabin: CabinFromUser) {
   // console.log("new Cabin", data);
   // console.log("image path", imagepath);
   //uploade Image
+  if (typeof newCabin.image === "string") return newData;
+
   const storageError = await UploadImage(imageName, newCabin.image as Image);
 
   if (storageError) {
