@@ -22,11 +22,12 @@ const StyledConfirmDelete = styled.div`
 
 interface Props {
   resourceName: string;
-  onConfirm: any;
+  onConfirm: () => void;
   disabled: boolean;
+  onClose: () => void;
 }
 
-function ConfirmDelete({ resourceName, onConfirm, disabled }: Props) {
+function ConfirmDelete({ resourceName, onClose, onConfirm, disabled }: Props) {
   return (
     <StyledConfirmDelete>
       <Heading as="h3">Delete {resourceName}</Heading>
@@ -36,10 +37,20 @@ function ConfirmDelete({ resourceName, onConfirm, disabled }: Props) {
       </p>
 
       <div>
-        <Button variation="secondary" disabled={disabled}>
+        <Button
+          onClick={onClose}
+          size="medium"
+          variation="secondary"
+          disabled={disabled}
+        >
           Cancel
         </Button>
-        <Button variation="danger" disabled={disabled}>
+        <Button
+          onClick={onConfirm}
+          size="medium"
+          variation="danger"
+          disabled={disabled}
+        >
           Delete
         </Button>
       </div>

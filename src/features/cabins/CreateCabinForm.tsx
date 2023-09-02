@@ -22,9 +22,13 @@ const defaultCabinToEdit = {
 
 interface Props {
   cabinToEdit?: Cabin;
+  onClose?: () => void;
 }
 
-function CreateCabinForm({ cabinToEdit = defaultCabinToEdit }: Props) {
+function CreateCabinForm({
+  cabinToEdit = defaultCabinToEdit,
+  onClose: onCloseModale,
+}: Props) {
   const { id: editId, ...editValues } = cabinToEdit as Cabin;
   const isEditSession = Boolean(editId);
 
@@ -50,11 +54,17 @@ function CreateCabinForm({ cabinToEdit = defaultCabinToEdit }: Props) {
       ? editCabin(
           { newCabin, editId },
           {
-            onSuccess: () => reset(),
+            onSuccess: () => {
+              reset();
+              onCloseModale?.();
+            },
           }
         )
       : createNewCabin(newCabin, {
-          onSuccess: () => reset(),
+          onSuccess: () => {
+            reset();
+            onCloseModale?.();
+          },
         });
 
     // mutate({ ...(data as CabinFromUser), image: data.image?.[0] });
@@ -65,7 +75,10 @@ function CreateCabinForm({ cabinToEdit = defaultCabinToEdit }: Props) {
   };
 
   return (
-    <Form onSubmit={handleSubmit(onSubmitForm, onError)}>
+    <Form
+      type={onCloseModale ? "modal" : "regular"}
+      onSubmit={handleSubmit(onSubmitForm, onError)}
+    >
       <FormRow errors={errors.name?.message} htmlFor="name" label="Cabin name">
         <Input
           type="text"
@@ -159,7 +172,12 @@ function CreateCabinForm({ cabinToEdit = defaultCabinToEdit }: Props) {
 
       <FormRow>
         {/* type is an HTML attribute! */}
-        <Button variation="secondary" size="medium" type="reset">
+        <Button
+          onClick={() => onCloseModale?.()}
+          variation="secondary"
+          size="medium"
+          type="reset"
+        >
           Cancel
         </Button>
         <Button disabled={isWorking} variation="primary" size="medium">
