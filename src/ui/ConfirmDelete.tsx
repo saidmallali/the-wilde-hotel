@@ -24,7 +24,7 @@ interface Props {
   resourceName: string;
   onConfirm: () => void;
   disabled: boolean;
-  onClose: () => void;
+  onClose?: () => void;
 }
 
 function ConfirmDelete({ resourceName, onClose, onConfirm, disabled }: Props) {

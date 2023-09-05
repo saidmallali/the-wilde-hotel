@@ -8,18 +8,8 @@ import { HiPencil, HiSquare2Stack, HiTrash } from "react-icons/hi2";
 import { useCreateCabin } from "./usecreateCabin";
 import Modal from "../../ui/Modal";
 import ConfirmDelete from "../../ui/ConfirmDelete";
-
-const TableRow = styled.div`
-  display: grid;
-  grid-template-columns: 0.6fr 1.8fr 2.2fr 1fr 1fr 1fr;
-  column-gap: 2.4rem;
-  align-items: center;
-  padding: 1.4rem 2.4rem;
-
-  &:not(:last-child) {
-    border-bottom: 1px solid var(--color-grey-100);
-  }
-`;
+import Table from "../../ui/Table";
+import Menus from "../../ui/Menus";
 
 const Img = styled.img`
   display: block;
@@ -80,7 +70,7 @@ function CabinRow({ cabinItem }: Props) {
 
   return (
     <>
-      <TableRow>
+      <Table.Row>
         <Img src={image} />
         <CabinDiv>{name}</CabinDiv>
         <div>Fits up to {maxCapacity} quests </div>
@@ -91,31 +81,28 @@ function CabinRow({ cabinItem }: Props) {
           <span>&mdash</span>
         )}
         <div>
-          <Button
-            onClick={handelDuplicateCabin}
-            variation="secondary"
-            size="small"
-            disabled={isCreating}
-          >
-            <HiSquare2Stack />
-          </Button>
           <Modal>
-            <Modal.Open opens="edit">
-              <Button variation="secondary" size="small">
-                <HiPencil />
-              </Button>
-            </Modal.Open>
+            <Menus.Menu>
+              <Menus.Toggle id={cabinId.toString()} />
+              <Menus.List id={cabinId.toString()}>
+                <Menus.Button
+                  onClick={handelDuplicateCabin}
+                  icon={<HiSquare2Stack />}
+                >
+                  duplicate
+                </Menus.Button>
+                <Modal.Open opens="edit">
+                  <Menus.Button icon={<HiPencil />}>edit</Menus.Button>
+                </Modal.Open>
+                <Modal.Open opens="delete">
+                  <Menus.Button icon={<HiTrash />}>delete</Menus.Button>
+                </Modal.Open>
+              </Menus.List>
+            </Menus.Menu>
+
             <Modal.Window name="edit">
               <CreateCabinForm cabinToEdit={cabinItem} />
             </Modal.Window>
-          </Modal>
-
-          <Modal>
-            <Modal.Open opens="delete">
-              <Button variation="primary" size="small">
-                <HiTrash />
-              </Button>
-            </Modal.Open>
             <Modal.Window name="delete">
               <ConfirmDelete
                 resourceName={` cabin ${name}`}
@@ -125,7 +112,7 @@ function CabinRow({ cabinItem }: Props) {
             </Modal.Window>
           </Modal>
         </div>
-      </TableRow>
+      </Table.Row>
     </>
   );
 }
