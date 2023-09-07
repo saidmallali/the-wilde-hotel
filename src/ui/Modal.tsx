@@ -1,4 +1,3 @@
-import { useEffect, useRef, MouseEvent, TouchEvent } from "react";
 import {
   cloneElement,
   useContext,

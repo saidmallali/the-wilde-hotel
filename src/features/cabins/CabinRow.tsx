@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import { Cabin } from "../../entities/Cabin";
 import { formatCurrency } from "../../utils/helpers";
-import Button from "../../ui/Button";
 import CreateCabinForm from "./CreateCabinForm";
 import { useDeleteCabin } from "./useDeleteCabin";
 import { HiPencil, HiSquare2Stack, HiTrash } from "react-icons/hi2";

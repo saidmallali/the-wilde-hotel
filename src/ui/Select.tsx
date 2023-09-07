@@ -1,7 +1,8 @@
 import styled from "styled-components";
+import { Option } from "./Filter";
 
 interface Props {
-  type: string;
+  type?: string;
 }
 
 const StyledSelect = styled.select<Props>`
@@ -17,3 +18,24 @@ const StyledSelect = styled.select<Props>`
   font-weight: 500;
   box-shadow: var(--shadow-sm);
 `;
+
+interface SelectProps {
+  options: Option[];
+  value?: string;
+  type: string;
+  onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+}
+
+const Select = ({ type, options, onChange, value }: SelectProps) => {
+  return (
+    <StyledSelect onChange={(e) => onChange(e)} type={type} value={value}>
+      {options.map((op) => (
+        <option key={op.value} value={op.value}>
+          {op.label}
+        </option>
+      ))}
+    </StyledSelect>
+  );
+};
+
+export default Select;

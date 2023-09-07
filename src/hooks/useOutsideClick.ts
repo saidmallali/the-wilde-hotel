@@ -8,7 +8,6 @@ export function useOutsideClick(handler: () => void): MutableRefObject<null> {
       function handleClick(e: MouseEvent<Element, MouseEvent> | TouchEvent) {
         const divElement = refEL.current! as HTMLElement;
         if (divElement && !divElement.contains(e.target as Node)) handler();
-        console.log("clicked");
       }
 
       document.addEventListener("click", handleClick, true);
