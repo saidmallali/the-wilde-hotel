@@ -1,22 +1,48 @@
 // import { getToday } from "../utils/helpers";
-// import supabase from "./supabase";
+import supabase from "./supabase";
 
-// export async function getBooking(id) {
-//   const { data, error } = await supabase
-//     .from("bookings")
-//     .select("*, cabins(*), guests(*)")
-//     .eq("id", id)
-//     .single();
+type BookingsParams = {
+  filter?: { field: string; value: string; method: string } | null;
+  sortBy?: { field: string; value: string; method: string } | null;
+};
+export async function getBookings({ filter, sortBy }: BookingsParams) {
+  let query = supabase
+    .from("bookings")
+    .select("*,cabins(name),guests(fullName,email)");
 
-//   if (error) {
-//     console.error(error);
-//     throw new Error("Booking not found");
-//   }
+  if (filter && filter !== null)
+    // query = query[(filter.method || "eq") as keyof typeof query](filter?.field, filter.value);
+    query = query.eq(filter?.field, filter.value);
 
-//   return data;
-// }
+  const { data, error } = await query;
 
-// // Returns all BOOKINGS that are were created after the given date. Useful to get bookings created in the last 30 days, for example.
+  // const { data, error } = await supabase
+  //   .from("bookings")s
+  //   .select("*,cabins(name),guests(fullName,email)");
+  if (error) {
+    console.log(error);
+    throw new Error("Bookings could not be loaded");
+  }
+
+  return data;
+}
+
+export async function getBooking(id: number) {
+  const { data, error } = await supabase
+    .from("bookings")
+    .select("*, cabins(*), guests(*)")
+    .eq("id", id)
+    .single();
+
+  if (error) {
+    console.error(error);
+    throw new Error("Booking not found");
+  }
+
+  return data;
+}
+
+// Returns all BOOKINGS that are were created after the given date. Useful to get bookings created in the last 30 days, for example.
 // export async function getBookingsAfterDate(date) {
 //   const { data, error } = await supabase
 //     .from("bookings")
@@ -32,7 +58,7 @@
 //   return data;
 // }
 
-// // Returns all STAYS that are were created after the given date
+// Returns all STAYS that are were created after the given date
 // export async function getStaysAfterDate(date) {
 //   const { data, error } = await supabase
 //     .from("bookings")
@@ -49,7 +75,7 @@
 //   return data;
 // }
 
-// // Activity means that there is a check in or a check out today
+// Activity means that there is a check in or a check out today
 // export async function getStaysTodayActivity() {
 //   const { data, error } = await supabase
 //     .from("bookings")
@@ -59,9 +85,9 @@
 //     )
 //     .order("created_at");
 
-//   // Equivalent to this. But by querying this, we only download the data we actually need, otherwise we would need ALL bookings ever created
-//   // (stay.status === 'unconfirmed' && isToday(new Date(stay.startDate))) ||
-//   // (stay.status === 'checked-in' && isToday(new Date(stay.endDate)))
+// Equivalent to this. But by querying this, we only download the data we actually need, otherwise we would need ALL bookings ever created
+// (stay.status === 'unconfirmed' && isToday(new Date(stay.startDate))) ||
+// (stay.status === 'checked-in' && isToday(new Date(stay.endDate)))
 
 //   if (error) {
 //     console.error(error);
