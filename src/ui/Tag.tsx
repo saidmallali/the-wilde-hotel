@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 interface Props {
-  type: number;
+  type: string;
 }
 
 const Tag = styled.span<Props>`

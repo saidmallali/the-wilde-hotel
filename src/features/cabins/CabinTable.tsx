@@ -20,9 +20,9 @@ const CabinTable = () => {
   let filtredCabins;
   if (filterValue === "all") filtredCabins = cabins;
   if (filterValue === "with-discount")
-    filtredCabins = cabins?.filter((cb) => cb.dicount > 0);
+    filtredCabins = cabins?.filter((cb) => cb.discount !== 0);
   if (filterValue === "no-discount")
-    filtredCabins = cabins?.filter((cb) => cb.dicount === 0);
+    filtredCabins = cabins?.filter((cb) => cb.discount === 0);
 
   //Sorting
   const sortByValue = searchParams.get("sortBy") || "name-asc";
@@ -42,10 +42,12 @@ const CabinTable = () => {
           <div>Price</div>
           <div>Discount</div>
         </Table.Header>
-        <Table.Body
-          data={sortedCabins}
-          render={(cabin) => <CabinRow cabinItem={cabin} key={cabin.id} />}
-        />
+        {sortedCabins && (
+          <Table.Body
+            data={sortedCabins}
+            render={(cabin) => <CabinRow cabinItem={cabin} key={cabin.id} />}
+          />
+        )}
         {/* {cabins?.map((cabin) => (
         <CabinRow cabinItem={cabin} key={cabin.id} />
       ))} */}

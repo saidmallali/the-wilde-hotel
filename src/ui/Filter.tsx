@@ -51,7 +51,7 @@ interface FilterProps {
 
 const Filter = ({ filterField, options }: FilterProps) => {
   const [searchParams, setSearchparams] = useSearchParams();
-  const searchValue = searchParams.get("discount");
+  const searchValue = searchParams.get(filterField);
   function handleClick(value: string) {
     searchParams.set(filterField, value);
     setSearchparams(searchParams);

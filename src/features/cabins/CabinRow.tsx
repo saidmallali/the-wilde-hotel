@@ -77,7 +77,7 @@ function CabinRow({ cabinItem }: Props) {
         {discount ? (
           <Discount>{formatCurrency(discount)}</Discount>
         ) : (
-          <span>&mdash</span>
+          <span> NO </span>
         )}
         <div>
           <Modal>

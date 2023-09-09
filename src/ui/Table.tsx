@@ -1,6 +1,7 @@
 import { ReactNode, createContext, useContext, ReactElement } from "react";
 import styled from "styled-components";
 import { Cabin } from "../entities/Cabin";
+import { Booking, BookingWithData } from "../entities/Booking";
 
 const StyledTable = styled.div`
   border: 1px solid var(--color-grey-200);
@@ -113,10 +114,21 @@ function Row({ children }: RowProps) {
   );
 }
 
-interface BodyProps {
-  data: any;
-  render: (cabin: Cabin) => ReactElement<any, any>;
-}
+// interface BodyProps {
+//   data: Cabin[] | Booking[];
+//   render: (el: Cabin | Booking) => ReactElement<any, any>;
+// }
+
+type BodyProps =
+  | {
+      data: Cabin[];
+      render: (el: any) => ReactElement<any, any>;
+    }
+  | {
+      data: BookingWithData[];
+      render: (el: any) => ReactElement<any, any>;
+    };
+
 function Body({ data, render }: BodyProps) {
   if (!data) return <Empty>no data to show at the moment</Empty>;
   return <StyledBody>{data.map(render)}</StyledBody>;
