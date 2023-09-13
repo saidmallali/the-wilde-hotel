@@ -1,20 +1,51 @@
 // import { getToday } from "../utils/helpers";
 import supabase from "./supabase";
+import { PAGE_SIZE } from "../utils/constants";
 
 type BookingsParams = {
-  filter?: { field: string; value: string; method: string } | null;
-  sortBy?: { field: string; value: string; method: string } | null;
+  filter?: { field: string; value: string; method?: string } | null;
+  sortBy?: { field: string; direction: string } | null;
+  page?: number;
 };
-export async function getBookings({ filter, sortBy }: BookingsParams) {
+export async function getBookings({ filter, sortBy, page }: BookingsParams) {
   let query = supabase
     .from("bookings")
-    .select("*,cabins(name),guests(fullName,email)");
+    .select("*,cabins(name),guests(fullName,email)", {
+      count: "exact",
+    });
+  // object return a function query (filter function)
+  const filterMethods: {
+    [key: string]: (field: string, value: string) => typeof query;
+  } = {
+    eq: (field, value) => query.eq(field, value),
+    gte: (field, value) => query.gte(field, value),
+    gt: (field, value) => query.gt(field, value),
+    lt: (field, value) => query.lt(field, value),
+    lte: (field, value) => query.lte(field, value),
+  };
 
-  if (filter && filter !== null)
-    // query = query[(filter.method || "eq") as keyof typeof query](filter?.field, filter.value);
-    query = query.eq(filter?.field, filter.value);
+  if (filter && filter.field && filter.value) {
+    const filterFunc = filterMethods[filter.method || "eq"];
+    // execute function query how return a query
+    if (filterFunc) {
+      query = filterFunc(filter?.field, filter?.value);
+    }
+  }
 
-  const { data, error } = await query;
+  if (sortBy) {
+    query = query.order(sortBy.field, {
+      ascending: sortBy.direction === "asc",
+    });
+  }
+
+  //Pagination
+  if (page) {
+    const from = (page - 1) * PAGE_SIZE;
+    const to = from + PAGE_SIZE - 1;
+    query = query.range(from, to);
+  }
+
+  const { data: bookings, error, count } = await query;
 
   // const { data, error } = await supabase
   //   .from("bookings")s
@@ -24,13 +55,14 @@ export async function getBookings({ filter, sortBy }: BookingsParams) {
     throw new Error("Bookings could not be loaded");
   }
 
-  return data;
+  return { bookings, count };
 }
 
 export async function getBooking(id: number) {
+  console.log("geting booking");
   const { data, error } = await supabase
     .from("bookings")
-    .select("*, cabins(*), guests(*)")
+    .select("*, cabins(*),guests(*)")
     .eq("id", id)
     .single();
 

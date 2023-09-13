@@ -11,6 +11,7 @@ import DataItem from "../../ui/DataItem";
 import { Flag } from "../../ui/Flag";
 
 import { formatDistanceFromNow, formatCurrency } from "../../utils/helpers";
+import { BookingWithData } from "../../entities/Booking";
 
 const StyledBookingDataBox = styled.section`
   /* Box */
@@ -67,8 +68,11 @@ const Guest = styled.div`
     color: var(--color-grey-700);
   }
 `;
+interface PriceProps {
+  isPaid: boolean;
+}
 
-const Price = styled.div`
+const Price = styled.div<PriceProps>`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -100,9 +104,12 @@ const Footer = styled.footer`
   color: var(--color-grey-500);
   text-align: right;
 `;
+interface PropsBookingDetail {
+  booking: BookingWithData;
+}
 
 // A purely presentational component
-function BookingDataBox({ booking }) {
+function BookingDataBox({ booking }: PropsBookingDetail) {
   const {
     created_at,
     startDate,
@@ -115,7 +122,7 @@ function BookingDataBox({ booking }) {
     hasBreakfast,
     observations,
     isPaid,
-    guests: { fullName: guestName, email, country, countryFlag, nationalID },
+    guests: { fullName: guestName, email, countryFlag, nationalID },
     cabins: { name: cabinName },
   } = booking;
 
@@ -140,7 +147,8 @@ function BookingDataBox({ booking }) {
 
       <Section>
         <Guest>
-          {countryFlag && <Flag src={countryFlag} alt={`Flag of ${country}`} />}
+          {countryFlag && <Flag src={countryFlag} alt={"Flag of"} />}
+          {/* {countryFlag && <Flag src={countryFlag} alt={`Flag of ${country}`} />} */}
           <p>
             {guestName} {numGuests > 1 ? `+ ${numGuests - 1} guests` : ""}
           </p>

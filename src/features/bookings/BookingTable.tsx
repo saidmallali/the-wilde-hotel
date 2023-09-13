@@ -5,13 +5,18 @@ import Empty from "../../ui/Empty";
 import { useBookings } from "./useBookings";
 import { BookingWithData } from "../../entities/Booking";
 import Spinner from "../../ui/Spinner";
+import Pagination from "../../ui/Pagination";
 
 function BookingTable() {
   const { data, isLoading, error } = useBookings();
-  const bookings = data as BookingWithData[];
+  const bookings = data?.bookings as BookingWithData[];
+  const count = data?.count;
+
+  // const bookings = data as BookingWithData[];
+  // const bookings = [{}] as BookingWithData[];
 
   if (isLoading) return <Spinner />;
-  if (!bookings.length) return <Empty resource="bookings" />;
+  if (!bookings!.length) return <Empty resource="bookings" />;
   if (error) return null;
 
   return (
@@ -34,6 +39,7 @@ function BookingTable() {
             )}
           />
         )}
+        <Table.Footer> {count && <Pagination count={count} />}</Table.Footer>
       </Table>
     </Menus>
   );
