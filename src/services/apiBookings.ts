@@ -128,20 +128,30 @@ export async function getBooking(id: number) {
 //   return data;
 // }
 
-// export async function updateBooking(id, obj) {
-//   const { data, error } = await supabase
-//     .from("bookings")
-//     .update(obj)
-//     .eq("id", id)
-//     .select()
-//     .single();
+export async function updateBooking(
+  id: number,
+  obj: {
+    status: string;
+    isPaid: boolean;
+    hasBreakfast?: boolean;
+    extrasPrice?: number;
+    totalPrice?: number;
+  }
+) {
+  const { data, error } = await supabase
+    .from("bookings")
+    .update(obj)
+    .eq("id", id)
+    .select()
+    .single();
 
-//   if (error) {
-//     console.error(error);
-//     throw new Error("Booking could not be updated");
-//   }
-//   return data;
-// }
+  console.log("obj", obj);
+  if (error) {
+    console.error(error);
+    throw new Error("Booking could not be updated");
+  }
+  return data;
+}
 
 // export async function deleteBooking(id) {
 //   // REMEMBER RLS POLICIES
