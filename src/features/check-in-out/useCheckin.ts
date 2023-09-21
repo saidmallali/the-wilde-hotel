@@ -29,7 +29,6 @@ export function useCheckin() {
       }),
 
     onSuccess: (data: Booking) => {
-      console.log("data from hook", data);
       toast.success(`Booki,g #${data.id} successfully checked in`);
       queryClient.invalidateQueries({ active: true });
       navigate("/");

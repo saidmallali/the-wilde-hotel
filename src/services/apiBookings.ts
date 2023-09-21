@@ -132,7 +132,7 @@ export async function updateBooking(
   id: number,
   obj: {
     status: string;
-    isPaid: boolean;
+    isPaid?: boolean;
     hasBreakfast?: boolean;
     extrasPrice?: number;
     totalPrice?: number;
@@ -153,13 +153,13 @@ export async function updateBooking(
   return data;
 }
 
-// export async function deleteBooking(id) {
-//   // REMEMBER RLS POLICIES
-//   const { data, error } = await supabase.from("bookings").delete().eq("id", id);
+export async function deleteBooking(id: number) {
+  // REMEMBER RLS POLICIES
+  const { data, error } = await supabase.from("bookings").delete().eq("id", id);
 
-//   if (error) {
-//     console.error(error);
-//     throw new Error("Booking could not be deleted");
-//   }
-//   return data;
-// }
+  if (error) {
+    console.error(error);
+    throw new Error("Booking could not be deleted");
+  }
+  return data;
+}
