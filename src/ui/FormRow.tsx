@@ -41,16 +41,16 @@ interface Props {
   label?: string;
   children: ReactNode;
   htmlFor?: string;
-  errors?: string;
+  error?: string;
 }
 
-const FormRow = ({ label, children, htmlFor, errors }: Props) => {
+const FormRow = ({ label, children, htmlFor, error }: Props) => {
   return (
     <StyledFormRow>
       {" "}
       <Label htmlFor={htmlFor}>{label}</Label>
       {children}
-      <Error>{errors}</Error>
+      <Error>{error}</Error>
     </StyledFormRow>
   );
 };

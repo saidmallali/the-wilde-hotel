@@ -15,6 +15,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Toaster } from "react-hot-toast";
 import Booking from "./pages/Booking";
 import Checkin from "./pages/Chekin";
+import ProtectedRoute from "./ui/ProtectedRoute";
 const queryclient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -30,7 +31,13 @@ const App = () => {
       <GlobalStyles />
       <BrowserRouter>
         <Routes>
-          <Route element={<AppLayout />}>
+          <Route
+            element={
+              <ProtectedRoute>
+                <AppLayout />
+              </ProtectedRoute>
+            }
+          >
             <Route index element={<Navigate replace to="dashboard" />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/bookings" element={<Bookings />} />
@@ -60,8 +67,8 @@ const App = () => {
             fontSize: "16px",
             maxWidth: "500px",
             padding: "16px 24px",
-            backgroundColor: "var(--color-gery-0)",
-            color: "var(--color-gery-700)",
+            backgroundColor: "var(--color-grey-0)",
+            color: "var(--color-grey-700)",
           },
         }}
       />
