@@ -79,7 +79,7 @@ function CreateCabinForm({
       type={onCloseModale ? "modal" : "regular"}
       onSubmit={handleSubmit(onSubmitForm, onError)}
     >
-      <FormRow errors={errors.name?.message} htmlFor="name" label="Cabin name">
+      <FormRow error={errors.name?.message} htmlFor="name" label="Cabin name">
         <Input
           type="text"
           id="name"
@@ -90,7 +90,7 @@ function CreateCabinForm({
       </FormRow>
 
       <FormRow
-        errors={errors.maxCapacity?.message}
+        error={errors.maxCapacity?.message}
         htmlFor="maxCapacity"
         label="Maximum capacity"
       >
@@ -108,7 +108,7 @@ function CreateCabinForm({
       </FormRow>
 
       <FormRow
-        errors={errors.regularPrice?.message}
+        error={errors.regularPrice?.message}
         htmlFor="regularPrice"
         label="Regular price"
       >
@@ -126,7 +126,7 @@ function CreateCabinForm({
       </FormRow>
 
       <FormRow
-        errors={errors.discount?.message}
+        error={errors.discount?.message}
         htmlFor="discount"
         label="Discount"
       >
@@ -144,7 +144,7 @@ function CreateCabinForm({
       </FormRow>
 
       <FormRow
-        errors={errors.description?.message}
+        error={errors.description?.message}
         htmlFor="description"
         label="Description for cabin"
       >
@@ -157,7 +157,7 @@ function CreateCabinForm({
       </FormRow>
 
       <FormRow
-        errors={errors.image?.message}
+        error={errors.image?.message}
         htmlFor="image"
         label="Cabin photo"
       >
