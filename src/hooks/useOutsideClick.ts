@@ -10,9 +10,18 @@ export function useOutsideClick(handler: () => void): MutableRefObject<null> {
         if (divElement && !divElement.contains(e.target as Node)) handler();
       }
 
-      document.addEventListener("click", handleClick, true);
+      document.addEventListener(
+        "click",
+        handleClick as EventListenerOrEventListenerObject,
+        true
+      );
 
-      return () => document.removeEventListener("click", handleClick, true);
+      return () =>
+        document.removeEventListener(
+          "click",
+          handleClick as EventListenerOrEventListenerObject,
+          true
+        );
     },
     [handler]
   );

@@ -9,7 +9,10 @@ type DarkModeProps = {
 };
 
 export function DarkModeProvider({ children }: DarkModeProps) {
-  const [isDarkMode, setIsDarkMode] = useLocalStorageState(false, "isdarkMode");
+  const [isDarkMode, setIsDarkMode] = useLocalStorageState(
+    window.matchMedia("(prefers-color-scheme: dark)").matches,
+    "isdarkMode"
+  );
 
   useEffect(() => {
     if (isDarkMode) {
