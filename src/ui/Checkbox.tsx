@@ -29,7 +29,7 @@ const StyledCheckbox = styled.div`
 interface Props {
   checked?: boolean;
   onChange?: () => void;
-  disabled: boolean;
+  disabled?: boolean;
   id: string;
   children: ReactNode;
 }

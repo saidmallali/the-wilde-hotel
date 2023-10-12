@@ -22,7 +22,7 @@ const StyledSelect = styled.select<Props>`
 interface SelectProps {
   options: Option[];
   value?: string;
-  type: string;
+  type?: string;
   onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 

@@ -155,6 +155,8 @@ img {
   filter: grayscale(var(--image-grayscale)) opacity(var(--image-opacity));
 }
 
+/* style for datepicker */
+
 /*
 FOR DARK MODE
 

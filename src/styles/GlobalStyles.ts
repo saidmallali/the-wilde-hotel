@@ -192,7 +192,19 @@ img {
   filter: grayscale(var(--image-grayscale)) opacity(var(--image-opacity));
 }
 
+/* style for datepicker */
+.react-datepicker-wrapper .react-datepicker__input-container {
+  display: flex ;
+  align-items: center ;
+}
 
+/* .react-datepicker__calendar-icon {
+  fill: #111827;
+} */
+
+.react-datepicker__calendar-icon {
+  fill: var(--color-grey-400);
+}
 
 `;
 

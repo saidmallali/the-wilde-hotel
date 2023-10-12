@@ -2,6 +2,8 @@
 import supabase from "./supabase";
 import { PAGE_SIZE } from "../utils/constants";
 import { getToday } from "../utils/helpers";
+import { InfoBooking } from "../features/bookings/CreateBookingForm";
+import { Geust } from "../entities/Geust";
 
 type BookingsParams = {
   filter?: { field: string; value: string; method?: string } | null;
@@ -165,4 +167,72 @@ export async function deleteBooking(id: number) {
     throw new Error("Booking could not be deleted");
   }
   return data;
+}
+
+export async function creatBooking(bookingData: InfoBooking) {
+  //1- extract geust info and countryFlag to it
+
+  let guest = {
+    fullName: bookingData.fullName,
+    email: bookingData.email,
+    nationalID: bookingData.nationalID,
+    nationality: bookingData.nationality,
+    countryFlag: bookingData.countryFlag,
+  };
+
+  const { data: newGuest, error: errorCreatingGeust } = await supabase
+    .from("guests")
+    .insert([guest])
+    .select();
+  if (errorCreatingGeust) throw new Error(errorCreatingGeust.message);
+  if (!newGuest) throw new Error("somting wrong ...");
+  if (!newGuest) return;
+
+  //2- create geust and add guestId to booking
+  console.log(newGuest);
+  let guestId;
+  if (newGuest) guestId = (newGuest.at(0) as Geust).id;
+
+  let cabinPrice;
+  if (bookingData.cabinInfo)
+    cabinPrice =
+      bookingData.numNights *
+      (bookingData.cabinInfo.regularPrice - bookingData.cabinInfo.discount);
+  const extrasPrice = bookingData.hasBreakfast
+    ? bookingData.numNights * 15 * bookingData.numGuests
+    : 0; // hardcoded breakfast price
+  let totalPrice;
+  if (cabinPrice) totalPrice = cabinPrice + extrasPrice;
+
+  const finalBookings = {
+    startDate: bookingData.startDate,
+    endDate: bookingData.endDate,
+    numNights: bookingData.numNights,
+    numGuests: bookingData.numGuests,
+    status: bookingData.status,
+    hasBreakfast: bookingData.hasBreakfast,
+    isPaid: bookingData.isPaid,
+    observations: bookingData.observations,
+    cabinID: bookingData.cabinID,
+    guestID: guestId,
+    totalPrice: totalPrice,
+    extrasPrice: extrasPrice,
+    cabinPrice: cabinPrice,
+  };
+
+  console.log("finalBookings", finalBookings);
+
+  //create Booking
+
+  const { data: newBooking, error } = await supabase
+    .from("bookings")
+    .insert(finalBookings)
+    .select();
+
+  if (error) {
+    console.error(error);
+    throw new Error("Booking could not be created");
+  }
+
+  return { newBooking, error };
 }

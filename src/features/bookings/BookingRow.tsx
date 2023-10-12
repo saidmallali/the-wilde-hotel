@@ -53,6 +53,7 @@ interface BookingRowProps {
 function BookingRow({ bookingData }: BookingRowProps) {
   const { checkout, isCheckeingOut } = useCheckout();
   const { deleteBooking, isDeleting } = useDeleteBooking();
+
   const {
     id: bookingId,
     created_at,
